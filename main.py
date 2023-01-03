@@ -99,6 +99,7 @@ class LityApp:
 
         self.login_password = ctk.CTkEntry(self.login_frame, placeholder_text="Password", show='*')
         self.login_password.place(relx=0.35, rely=0.4, relwidth=0.3)
+        self.login_username.insert(0, 'litytech')
 
         btn = ctk.CTkButton(self.login_frame, text='login', command=self.login)
         btn.place(relx=0.35, rely=0.6, relwidth=0.3)
@@ -164,14 +165,6 @@ class LityApp:
         cur.execute("UPDATE authentication SET password=? WHERE username=?", (password, 'litytech'))
         con.commit()
         con.close()
-
-    def gets(self):
-        con = sqlite3.connect(self.db)
-        cur = con.cursor()
-        cur.execute("SELECT * FROM authentication")
-        res = cur.fetchall()
-        con.close()
-        return res
 
     def get_password(self):
         con = sqlite3.connect(self.db)
@@ -308,6 +301,8 @@ class LityApp:
         self.dev_phone_no = ctk.CTkEntry(device_frame, placeholder_text="Phone number")
         self.dev_phone_no.place(relx=0.05, rely=0.05)
 
+        ctk.CTkLabel(device_frame, text=f'Size: {self.get_data_length()}').place(relx=0.5, rely=0.05, relwidth=0.15)
+
         self.dev_id = ctk.CTkEntry(device_frame, placeholder_text="Device id")
         self.dev_id.place(relx=0.635, rely=0.05, relwidth=0.15)
 
@@ -334,12 +329,12 @@ class LityApp:
     
 
     def update(self):
-        id = self.update_id.get()
-        status = self.status.get()
-        charge = self.update_charge.get()
-        deposit = self.update_deposit.get()
-        issue = self.update_issue.get()
-        coll_date = self.update_coll_date.get()
+        id = self.update_id.get().strip()
+        status = self.status.get().strip()
+        charge = self.update_charge.get().strip()
+        deposit = self.update_deposit.get().strip()
+        issue = self.update_issue.get().strip()
+        coll_date = self.update_coll_date.get().strip()
         
         con = sqlite3.connect(self.db)
         cur = con.cursor()
@@ -434,7 +429,7 @@ class LityApp:
         coll_date = self.coll_date.get().strip()
         message = ''
 
-        if phone_name.strip()!='' and model.strip()!='' and color.strip()!='' and issue.strip()!='' and first_name.strip()!='' and last_name.strip()!='' and phone_no.strip()!='' and amount_charged.strip()!='' and amount_deposited.strip()!='' and date.strip()!='' and coll_date.strip()!='':
+        if phone_name!='' and model!='' and color!='' and issue!='' and first_name!='' and last_name!='' and phone_no!='' and amount_charged!='' and amount_deposited!='' and date!='' and coll_date!='':
             db_size = self.get_data_length()
             self.save_data_to_db((db_size+1, phone_no, first_name, last_name, phone_name, model, color, issue, amount_charged, amount_deposited, date, coll_date, 'RECEIVED'))
             message = 'Data successfully saved.'
